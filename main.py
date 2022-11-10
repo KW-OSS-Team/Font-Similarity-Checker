@@ -14,16 +14,18 @@ from PIL import Image
 
 
 class SimilarityCheck:
-    def __init__(self, image=Image.open('data/test3.png')):
-        self.image = image
+    def __init__(self):
+        self.image = None
         self.segment = Segmentation()
         self.similarity = Similarity()
 
-    def check_similarity(self):
+    def check_similarity(self, image=Image.open("data/test3.png")):
+        self.image = image
         roi = self.segment.segment(self.image)
+        # TODO: Something cool
         similar_fonts = {
-            "NanumGothic", 0.7,
-            "NanumSquare", 0.5
+            "NanumGothic": 0.7,
+            "NanumSquare": 0.5
         }
         return roi, similar_fonts
 
