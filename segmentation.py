@@ -1,5 +1,5 @@
 __author__ = "Jiwoon Lee"
-__copyright__ = "Copyright 2022, Kwangwoon University 2022-2 Open Source Project"
+__copyright__ = "Copyright 2022, Kwangwoon University 2022-2 Open Source Project Team"
 __credits__ = [
     "https://stackoverflow.com/a/1963146",
     "https://stackoverflow.com/a/9459208",
@@ -16,28 +16,12 @@ import os
 import fnmatch
 
 import re
-import numpy as np
-
 import cv2
 import pytesseract
+import numpy as np
 from PIL import Image
 
-
-# Remove Background Transparency
-def remove_transparency(im, bg_colour=(255, 255, 255)):
-    # Only process if image has transparency ()
-    if im.mode in ('RGBA', 'LA') or (im.mode == 'P' and 'transparency' in im.info):
-        # Need to convert to RGBA if LA format due to a bug in PIL
-        alpha = im.convert('RGBA').split()[-1]
-
-        # Create a new background image of our matt color.
-        # Must be RGBA because paste requires both images have the same format
-        bg = Image.new("RGBA", im.size, bg_colour + (255,))
-        bg.paste(im, mask=alpha)
-        return bg
-
-    else:
-        return im
+from preprocessing import remove_transparency
 
 
 # Image Discretization
@@ -57,39 +41,16 @@ def morphology(image, kernel_size=1):
 
 
 class Segmentation:
-    def __init__(self, filename):
+    def __init__(self):
         with open('whitelist.txt', encoding='utf-8') as f:
             temp = f.readlines()[0]
         self.whitelist = [char for char in temp]  # Unpack strings
-        self.file = f'data/{filename}'      # image file
-        self.image = cv2.imread(self.file)  # image (opencv)
-        self.box = []
 
-    @staticmethod
-    def save_image(image, name):
-        files = fnmatch.filter((f for f in os.listdir('extracted/')), f'{name}*.')
+    def segment(self, image_input: Image) -> list:
+        box = []
 
-        if not files:  # is empty
-            num = ''
-        elif len(files) == 1:
-            num = '(1)'
-        else:
-            # files is supposed to contain 'somefile.jpg'
-            files.remove(f'{name}.jpg')
-            num = '(%i)' % (int(re.search(r'\((\d+)\)', max(files)).group(1)) + 1)
-
-        filename = r'extracted/' + name + num + '.jpg'
-        try:
-            with open(filename, mode='w+b') as f:
-                _, encoded_img = cv2.imencode('.jpg', image)
-                encoded_img.tofile(f)
-            print(f"Saved {filename}")
-        except:
-            print(f'Failed to save {filename}')
-
-    def segment(self):
         # Load image and remove transparent background
-        image = np.asarray(remove_transparency(Image.fromarray(cv2.imread(self.file))))
+        image = np.asarray(remove_transparency(image_input))
 
         # Change image to grayscale
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -100,18 +61,18 @@ class Segmentation:
         # Transform morphology and get edged image
         image = morphology(image)
 
-        """
         # For Debug
-        cv2.imshow('gray', gray)
-        cv2.imshow('blurred', blurred)
-        cv2.imshow('edged', edged)
-        cv2.waitKey(0)
-        """
+        # cv2.imshow('gray', gray)
+        # cv2.imshow('blurred', blurred)
+        # cv2.imshow('edged', image)
+        # cv2.waitKey(0)
 
         hImg, wImg = image.shape
         boxes = pytesseract.image_to_boxes(image, lang='kor')
+        text = pytesseract.image_to_string(image, lang='kor')
 
         ROI_number = 0
+        ROI_list = []
         for b in boxes.splitlines():
             b = b.split(' ')
             if b[0] not in self.whitelist:  # Don't save if the recognized character is not Korean
@@ -124,26 +85,26 @@ class Segmentation:
 
             # Save character and box positions
             # to plot boxes on image
-            self.box.append(b)
+            box.append(b)
 
             # ROI is a box
-            roi = self.image[x1:y1, x2:y2]
+            roi = image[x1:y1, x2:y2]
 
             # For Debug
             # cv2.imshow('roi', roi)
             # cv2.waitKey(0)
 
             try:
-                self.save_image(roi, b[0])
+                ROI_list.append([b[0], roi])
             except cv2.error:
                 print(f'Error in saving {b[0]}')
                 print(f'ROI number: {ROI_number}')
                 continue
             ROI_number += 1
 
-        return ROI_number
+        return ROI_list
 
 
 if __name__ == "__main__":
-    segment = Segmentation('test3.png')
-    segment.segment()
+    segment = Segmentation()
+    segment.segment(Image.open('data/test3.png'))

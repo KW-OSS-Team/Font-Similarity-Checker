@@ -1,6 +1,10 @@
 # IDE configuration
 .idea/
 
+# Dataset
+dataset/
+data/
+
 # Data
 *.jpg
 *.jpeg
