@@ -16,11 +16,32 @@ from keras.preprocessing.image import ImageDataGenerator
 
 # Directory of fonts
 location = 'dataset/'
-datagen = ImageDataGenerator(rotation_range=5,
-                             width_shift_range=0.1,
-                             height_shift_range=0.1,
-                             shear_range=0.2,
-                             zoom_range=0.2)
+
+
+def find_white_background(image, threshold=0.3):
+    """remove images with transparent or white background"""
+    w, h = image.shape
+
+    total = w * h
+    background = np.array([255, 255])
+
+    cnt = 0
+    for row in image:
+        for pixel in row:
+            if np.array_equal(pixel, background):
+                cnt += 1
+
+    percent = cnt / total
+    if percent >= threshold:
+        return True
+    else:
+        return False
+
+
+# Image resize to 128*128
+def resize(im: Image) -> Image:
+    resized = im.resize((128, 128))
+    return resized
 
 
 # Remove Background Transparency
@@ -40,19 +61,56 @@ def remove_transparency(im, bg_colour=(255, 255, 255)):
         return im
 
 
-def process_glyph(glyph_name):
+def _process_glyph(glyph_name):
     # Directory that file will be saved
     savedir = 'images/'+glyph_name+'/'
+
     # Get list of fonts.png
     files = os.listdir(location+glyph_name+'/')
+
+    if not os.path.exists(savedir):
+        os.makedirs(savedir)
+
     for name in files:
-        if not os.path.exists(savedir):
-            os.makedirs(savedir)
-        img = Image.fromarray(image_filter(location+glyph_name+'/'+name))
+        img = Image.fromarray(_image_filter(location+glyph_name+'/'+name))
         img.save(savedir+name)
 
 
-def image_filter(file_name):
+def _process_glyph_to_array(glyph_name):
+    # Directory that file will be saved
+    savedir = 'images/' + glyph_name + '/'
+
+    # Get list of fonts.png
+    files = os.listdir(location + glyph_name + '/')
+    img_list = []
+    font_name_list = []
+
+    if not os.path.exists(savedir):
+        os.makedirs(savedir)
+
+    for name in files:
+        # Add font name to font_name_list
+        font_name_list.append(name.replace('.png', ''))
+        img_list.append(Image.fromarray(_image_filter(location + glyph_name + '/' + name)))
+    np.save(savedir+glyph_name+'_label', np.array(font_name_list, dtype=object))
+    np.save(savedir+glyph_name+'_data', np.array(img_list, dtype=object))
+
+
+def _process_dl(glyph_name):
+    # Directory that file will be saved
+    savedir = 'data_for_dl/'+glyph_name+'/'
+
+    # Get list of fonts.png
+    files = os.listdir(location+glyph_name+'/')
+
+    for name in files:
+        if not os.path.exists(savedir+name+'/'):
+            os.makedirs(savedir+name+'/')
+            img = Image.fromarray(_image_filter(location+glyph_name+'/'+name))
+            img.save(savedir+name+'/'+name)
+
+
+def _image_filter(file_name):
     image = Image.open(file_name)
     # Load image and remove transparent background
     image = np.asarray(remove_transparency(image))
@@ -67,8 +125,12 @@ if __name__ == '__main__':
     # Get list of glyphs
     glyphs = os.listdir(location)
 
-    num_process = 4
+    num_process = 6
+
+    print("Start Preprocessing")
     with Pool(num_process) as p:
-        p.map(process_glyph, glyphs)
+        p.map(_process_glyph_to_array, glyphs)
 
     # process_glyph(glyphs)
+
+    print("Finished Preprocessing")
