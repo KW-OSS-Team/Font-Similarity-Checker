@@ -4,6 +4,7 @@
 # Dataset
 dataset/
 data/
+images/
 
 # Data
 *.jpg
