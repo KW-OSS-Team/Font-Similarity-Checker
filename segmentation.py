@@ -5,8 +5,7 @@ __credits__ = [
     "https://stackoverflow.com/a/9459208",
     "https://stackoverflow.com/a/1963146",
     "https://stackoverflow.com/a/8720632",
-    "https://stackoverflow.com/a/62414364",
-    "https://yunwoong.tistory.com/58"
+    "https://stackoverflow.com/a/62414364"
 ]
 __license__ = "MIT License"
 __maintainer__ = "Jiwoon Lee"
