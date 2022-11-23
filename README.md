@@ -6,9 +6,9 @@
 
 ---
 
-<h1 align="center"> 폰트 저작권 검사기 </h1> <br>
+<h1 align="center"> 가가 가가?: 폰트 저작권 검사기 </h1> <br>
 <p align="center">
-    <img alt="가가 가가?" title="가가 가가?" src="https://github.com/KW-OSS-Team/Font-Similarity-Checker/blob/main/icon/icon.png" width="450">
+    <img alt="가가 가가?: 폰트 저작권 검사기" title="가가 가가?: 폰트 저작권 검사기" src="https://github.com/KW-OSS-Team/Font-Similarity-Checker/blob/main/icon/icon.png" width="450">
 </p>
 
 <p align="center">
