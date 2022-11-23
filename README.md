@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-    저작권 검사, 해보셨나요?
+    <b>저작권 검사, 해보셨나요?</b>
 </p>
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -54,8 +54,8 @@ pip install -r requirements.txt
 
 ## 라이선스
 
-- 이 프로젝트는 GPL 3.0 라이선스를 따릅니다. 자세한 내용은 [License(국문)](./LICENSE_ko.md) 또는 [License(영문)[./LICENSE_en.md)를 참고하시기 바랍니다.
+- 이 프로젝트는 GPL 3.0 라이선스를 따릅니다. 자세한 내용은 [License(국문)](./LICENSE_ko.md) 또는 [License(영문)](./LICENSE_en.md)를 참고하시기 바랍니다.
 
 ## README template
 
-- [Link](https://github.com/gitpoint/git-point#readme) Copyright (c) 2017-2019 Houssein Djirdeh
+- [GitPoint](https://github.com/gitpoint/git-point#readme) Copyright (c) 2017-2019 Houssein Djirdeh
