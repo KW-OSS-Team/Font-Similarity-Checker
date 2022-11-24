@@ -11,6 +11,7 @@ from similarity_check import Similarity
 
 # Debug
 from PIL import Image
+import time
 
 
 class SimilarityCheck:
@@ -39,7 +40,10 @@ class SimilarityCheck:
 
 
 if __name__ == '__main__':
+    start_time = time.time()
     similarity_checker = SimilarityCheck()
     roi, similar_fonts = similarity_checker.check_similarity()
     print(similar_fonts)
+    print("--- %s seconds ---" % (time.time() - start_time))
+    print("DONE")
 

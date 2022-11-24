@@ -8,7 +8,7 @@ __email__ = ["webmaster@kw.ac.kr", "metr0jw@naver.com"]
 import os
 
 import numpy as np
-from sewar.full_ref import ssim, msssim
+from SSIM_PIL import compare_ssim
 from PIL import Image
 from PIL.ImageOps import invert
 
@@ -17,11 +17,11 @@ from preprocessing import resize, find_white_background
 location = 'images/'
 fonts_to_output = 5
 
+
 class Similarity:
     def __init__(self):
         self.font_list = [font.replace('.png', '') for font in os.listdir('images/가/')]
-        self.ssim = ssim
-        self.msssim = msssim
+        self.ssim = compare_ssim
 
     def get_similarity(self, roi: [[str, Image]]) -> list:
         similar_fonts = list()
@@ -39,16 +39,16 @@ class Similarity:
 
             similarity = dict()
             fontdir = os.listdir(glyph_dir)
-            font_list = [font.replace('.png', '') for font in fontdir]
             resized_input = np.array(resize(glyph[1]).convert("L"))
 
-            for font in fontdir:
-                fontname = font.replace('.png', '')
-                try:
-                    font_db = np.array(Image.open(glyph_dir + font).convert("L"))
-                    similarity[fontname] = self.ssim(resized_input, font_db)[0]
-                except:
-                    print(f'failed to read {font}: font file is not available')
+            try:
+                font_db = np.load(glyph_dir + glyph[0] + '_data.npy')
+                fontname_db = np.load(glyph_dir + glyph[0] + '_label.npy')
+
+                for font_it, name_it in zip(font_db, fontname_db):
+                    similarity[name_it] = self.ssim(Image.fromarray(resized_input, "L"), Image.fromarray(font_it, "L"))
+            except:
+                print(f'failed to read {glyph[0]}: font file is not available')
 
             sim_fonts = dict(sorted(similarity.items(), key=lambda item: item[1], reverse=True)[:fonts_to_output])
             similar_fonts.append(sim_fonts)
