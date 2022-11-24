@@ -1,8 +1,7 @@
 __author__ = "Jiwoon Lee"
 __copyright__ = "Copyright 2022, Kwangwoon University 2022-2 Open Source Project Team"
-__credits__ = [
-]
-__license__ = "MIT License"
+__credits__ = "hamoci"
+__license__ = "GPL 3.0 License"
 __maintainer__ = "Jiwoon Lee"
 __email__ = ["webmaster@kw.ac.kr", "metr0jw@naver.com"]
 
