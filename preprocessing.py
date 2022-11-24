@@ -91,9 +91,10 @@ def _process_glyph_to_array(glyph_name):
     for name in files:
         # Add font name to font_name_list
         font_name_list.append(name.replace('.png', ''))
-        img_list.append(Image.fromarray(_image_filter(location + glyph_name + '/' + name)))
-    np.save(savedir+glyph_name+'_label', np.array(font_name_list, dtype=object))
-    np.save(savedir+glyph_name+'_data', np.array(img_list, dtype=object))
+        img = np.uint8(np.asarray(Image.fromarray(_image_filter(location+glyph_name+'/'+name)).convert("L")))
+        img_list.append(img)
+    np.save(savedir+glyph_name+'_label', np.array(font_name_list))
+    np.save(savedir+glyph_name+'_data', np.array(img_list))
 
 
 def _process_dl(glyph_name):
@@ -128,6 +129,7 @@ if __name__ == '__main__':
     num_process = 6
 
     print("Start Preprocessing")
+    
     with Pool(num_process) as p:
         p.map(_process_glyph_to_array, glyphs)
 

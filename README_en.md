@@ -1,12 +1,12 @@
 # Font-Similarity-Checker
 
-<h1 align="center"> Font Copyright Checker </h1> <br>
+<h1 align="center"> Is that THIS THAT?: Font Copyright Checker </h1> <br>
 <p align="center">
-    <img alt="Is that This that?" title="Is that This that?" src="https://github.com/KW-OSS-Team/Font-Similarity-Checker/blob/main/icon/icon.png" width="450">
+    <img alt="Is that THIS THAT?: Font Copyright Checker" title="Is that THIS THAT?: Font Copyright Checker" src="https://github.com/KW-OSS-Team/Font-Similarity-Checker/blob/main/icon/icon.png" width="450">
 </p>
 
 <p align="center">
-    Did you checked the copyright?
+    <b>Did you checked the copyright?</b>
 </p>
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
