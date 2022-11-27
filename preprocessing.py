@@ -12,7 +12,6 @@ from multiprocessing.pool import Pool
 import cv2
 import numpy as np
 from PIL import Image
-from keras.preprocessing.image import ImageDataGenerator
 
 # Directory of fonts
 location = 'dataset/'

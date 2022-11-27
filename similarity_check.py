@@ -13,7 +13,12 @@ from PIL import Image
 from PIL.ImageOps import invert
 
 from preprocessing import resize, find_white_background
-
+font_dir = ''
+try:
+    from Font_Copyright_Checker_Web.settings import BASE_DIR
+    font_dir = os.path.join(BASE_DIR, 'analyzer/font_similiarity_checker/data/images/가/')
+except:
+    font_dir = 'images/가/'
 location = 'images/'
 fonts_to_output = 5
 
