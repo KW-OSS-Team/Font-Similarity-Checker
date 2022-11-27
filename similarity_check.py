@@ -25,7 +25,7 @@ fonts_to_output = 5
 
 class Similarity:
     def __init__(self):
-        self.font_list = [font.replace('.png', '') for font in os.listdir('images/가/')]
+        self.font_list = [font.replace('.png', '') for font in os.listdir(font_dir)]
         self.ssim = compare_ssim
 
     def get_similarity(self, roi: [[str, Image]]) -> list:
